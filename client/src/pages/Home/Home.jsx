@@ -3,6 +3,7 @@ import Carousel from "../../components/Carousel";
 import apiCall from "../../services/index";
 import appUtils from "../../services/appUtils";
 import { HomepageContainer } from "./Home.styled";
+import ProductCategory from "../../components/ProductCategory";
 
 const Home = () => {
   const [banners, setBanners] = useState([]);
@@ -43,6 +44,7 @@ const Home = () => {
   return (
     <HomepageContainer>
       {banners?.length > 0 && <Carousel banners={banners} />}
+      <ProductCategory />
     </HomepageContainer>
   );
 };
