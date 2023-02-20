@@ -67,7 +67,7 @@ const ProductList = () => {
             <ProductContent>
               <Description>{item.description}</Description>
               <PriceTag>
-                <p>Rs {item.price}</p>
+                <p>MRP Rs {item.price}</p>
                 <ProductBuyButton>Buy Now</ProductBuyButton>
               </PriceTag>
             </ProductContent>
