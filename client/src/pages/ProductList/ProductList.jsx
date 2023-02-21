@@ -13,12 +13,16 @@ import {
   ProductWrapper,
 } from "./Product.styled";
 import CategorySidebar from "../../components/CategorySidebar";
+import { useSelector } from "react-redux";
 
 const ProductList = () => {
   const [productList, setProductList] = useState([]);
   const [categories, setCategories] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const currentProductCategory = useSelector(
+    (store) => store.product.currentProductCategory
+  );
   useEffect(() => {
     const fetchProductsandCategories = async () => {
       setLoading(true);
@@ -60,19 +64,35 @@ const ProductList = () => {
     <ProductWrapper>
       <CategorySidebar categories={categories} />
       <ProductCard>
-        {productList?.map((item, ind) => (
-          <Container key={ind}>
-            <Heading>{item.name}</Heading>
-            <Image src={item.imageURL} alt={item.name} />
-            <ProductContent>
-              <Description>{item.description}</Description>
-              <PriceTag>
-                <p>MRP Rs {item.price}</p>
-                <ProductBuyButton>Buy Now</ProductBuyButton>
-              </PriceTag>
-            </ProductContent>
-          </Container>
-        ))}
+        {currentProductCategory.length > 0
+          ? productList
+              ?.filter((item) => item.category === currentProductCategory)
+              .map((item, ind) => (
+                <Container key={ind}>
+                  <Heading>{item.name}</Heading>
+                  <Image src={item.imageURL} alt={item.name} />
+                  <ProductContent>
+                    <Description>{item.description}</Description>
+                    <PriceTag>
+                      <p>MRP Rs {item.price}</p>
+                      <ProductBuyButton>Buy Now</ProductBuyButton>
+                    </PriceTag>
+                  </ProductContent>
+                </Container>
+              ))
+          : productList?.map((item, ind) => (
+              <Container key={ind}>
+                <Heading>{item.name}</Heading>
+                <Image src={item.imageURL} alt={item.name} />
+                <ProductContent>
+                  <Description>{item.description}</Description>
+                  <PriceTag>
+                    <p>MRP Rs {item.price}</p>
+                    <ProductBuyButton>Buy Now</ProductBuyButton>
+                  </PriceTag>
+                </ProductContent>
+              </Container>
+            ))}
       </ProductCard>
     </ProductWrapper>
   );
