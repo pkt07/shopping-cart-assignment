@@ -9,22 +9,37 @@ import {
   ItemQuantityWrapper,
   ItemTotalPrice,
 } from "./CartListItem.styled";
+import { useDispatch } from "react-redux";
+import { handleCartQuantity } from "../../store/cart/cartSlice";
 
 const CartListItem = ({ id, name, imageURL, price, quantity }) => {
+  debugger;
+  const dispatch = useDispatch();
+
+  const handleItemCalculation = (type) => {
+    const obj = { id, type };
+    dispatch(handleCartQuantity(obj));
+  };
   return (
     <CartListItemWrapper>
-      <ItemInfoWrapper>
+      <ItemInfoWrapper key={id}>
         <ItemImage src={imageURL} alt={name} />
         <ItemInfo>
           <ItemName>
             <strong>{name}</strong>
           </ItemName>
           <ItemQuantityWrapper>
-            <ItemCalcButton aria-label={`Item Quantity Decrease`}>
+            <ItemCalcButton
+              aria-label={`Item Quantity Decrease`}
+              onClick={() => handleItemCalculation("remove-one")}
+            >
               −
             </ItemCalcButton>
             <span>{quantity}</span>
-            <ItemCalcButton aria-label={`Item Quantity Increase`}>
+            <ItemCalcButton
+              aria-label={`Item Quantity Increase`}
+              onClick={() => handleItemCalculation("add-one")}
+            >
               +
             </ItemCalcButton>
             <span>X</span>

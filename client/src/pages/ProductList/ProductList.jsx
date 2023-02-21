@@ -13,7 +13,10 @@ import {
   ProductWrapper,
 } from "./Product.styled";
 import CategorySidebar from "../../components/CategorySidebar";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { handleAddToCart } from "../../store/cart/cartSlice";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProductList = () => {
   const [productList, setProductList] = useState([]);
@@ -23,6 +26,7 @@ const ProductList = () => {
   const currentProductCategory = useSelector(
     (store) => store.product.currentProductCategory
   );
+  const dispatch = useDispatch();
   useEffect(() => {
     const fetchProductsandCategories = async () => {
       setLoading(true);
@@ -60,8 +64,44 @@ const ProductList = () => {
   if (!isLoading && !error && productList?.length === 0) {
     return <h2>No records available</h2>;
   }
+  const showToast = () => {
+    toast.success("Item added to the cart", {
+      position: "top-center",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
+  const handleBuyProduct = async (product) => {
+    try {
+      const obj = {
+        id: product.id,
+        name: product.name,
+        imageURL: product.imageURL,
+        price: product.price,
+        quantity: 1,
+        stock: product.stock,
+      };
+      const response = await apiCall(appUtils.api.addToCart, "POST", {
+        id: product.id,
+      });
+      debugger;
+      if (response.data.response === "Success") {
+        dispatch(handleAddToCart(obj));
+        showToast();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ProductWrapper>
+      <ToastContainer />
       <CategorySidebar categories={categories} />
       <ProductCard>
         {currentProductCategory.length > 0
@@ -75,7 +115,9 @@ const ProductList = () => {
                     <Description>{item.description}</Description>
                     <PriceTag>
                       <p>MRP Rs {item.price}</p>
-                      <ProductBuyButton>Buy Now</ProductBuyButton>
+                      <ProductBuyButton onClick={() => handleBuyProduct(item)}>
+                        Buy Now
+                      </ProductBuyButton>
                     </PriceTag>
                   </ProductContent>
                 </Container>
@@ -88,7 +130,9 @@ const ProductList = () => {
                   <Description>{item.description}</Description>
                   <PriceTag>
                     <p>MRP Rs {item.price}</p>
-                    <ProductBuyButton>Buy Now</ProductBuyButton>
+                    <ProductBuyButton onClick={() => handleBuyProduct(item)}>
+                      Buy Now
+                    </ProductBuyButton>
                   </PriceTag>
                 </ProductContent>
               </Container>

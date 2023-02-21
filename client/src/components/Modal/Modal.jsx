@@ -42,6 +42,27 @@ const Modal = ({ onClose, showModal }) => {
     setCheckoutPrice(sum);
   }, [cartList]);
 
+  const handleTab = (event) => {
+    if (event.key === "Tab") {
+      const elements = Array.from(modalRef.current.querySelectorAll("*"));
+      const first = elements[0];
+      if (
+        event.shiftKey &&
+        (document.activeElement === first ||
+          document.activeElement.role === "dialog")
+      ) {
+        checkoutButtonRef.current.focus();
+        event.preventDefault();
+      } else if (
+        !event.shiftKey &&
+        document.activeElement === checkoutButtonRef.current
+      ) {
+        first.focus();
+        event.preventDefault();
+      }
+    }
+  };
+
   const handleCheckout = () => {
     onClose();
   };
@@ -75,6 +96,7 @@ const Modal = ({ onClose, showModal }) => {
         role="dialog"
         aria-modal={true}
         tabIndex={0}
+        onKeyDown={handleTab}
       >
         <CartModalHeader tabIndex={0}>
           <CartModalHeading>

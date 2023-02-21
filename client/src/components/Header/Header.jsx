@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink, Link } from "react-router-dom";
 import BRANDLOGO from "../../logo.png";
 import { FaShoppingCart } from "react-icons/fa";
@@ -13,14 +13,21 @@ import {
   RightSection,
 } from "./Header.styled";
 import Modal from "../Modal";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const [showModal, setShowModal] = useState(false);
   const [totalCartQuantity, setCartQuantity] = useState(null);
+  const cartList = useSelector((store) => store.cart.cartList);
 
   const handleModalClose = () => {
     setShowModal(false);
   };
+
+  useEffect(() => {
+    const sum = cartList.reduce((acc, obj) => acc + obj.quantity, 0);
+    setCartQuantity(sum);
+  }, [cartList]);
 
   return (
     <Container>
