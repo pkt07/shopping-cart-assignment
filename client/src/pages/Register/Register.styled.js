@@ -55,6 +55,10 @@ export const FormInput = styled.div`
     margin-top: 0.3rem;
     border-bottom: 2px solid #038aa1;
   }
+  error-msg {
+    color: red;
+    font-weight: 600;
+  }
 `;
 export const LoginButton = styled.button`
   width: 100%;
